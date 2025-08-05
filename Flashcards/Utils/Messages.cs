@@ -12,7 +12,7 @@
 
         // Flashcard
 
-        public readonly static string FlashcardStackParentPrompt = "\nPlease enter the name of the stack your flash card will be stored in (if it does not exist yet, you must first create it):\n";
+        public readonly static string FlashcardStackParentPrompt = "\nPlease enter the exact name (case-insensitive) of the stack your flash card will belong to (if it does not exist yet, you must first create it):\n";
 
         public readonly static string FlashcardToDeleteStackParentPrompt = "\nPlease enter the exact name of the stack the flashcard you wish to delete belongs to (case-insensitive):\n";
 
@@ -26,9 +26,9 @@
 
         public readonly static string SuccessfullyAddedFlashcardMessage = "\nSuccessfully added flashcard to stack '{0}'!\n";
 
-        public readonly static string FlashcardAlreadyExists = "\nA flashcard with this question already exists in the stack you have selected. Please try again!\n";
+        public readonly static string FlashcardAlreadyExistsMessage = "\nA flashcard with this question already exists in the stack you have selected. Please try again!\n";
 
-        public readonly static string FlashcardDoesNotExist = "\nA flashcard with this name does not exist within the stack '{0}'!\n";
+        public readonly static string FlashcardDoesNotExistMessage = "\nA flashcard with this name does not exist within the stack '{0}'!\n";
 
         public readonly static string SuccessfullyDeletedFlashcardMessage = "\nSuccessfully deleted flashcard from '{0}' stack!\n";
 
@@ -37,6 +37,8 @@
         public readonly static string StackNamePrompt = "\nPlease enter a name for your new stack (up to 150 characters):\n";
 
         public readonly static string StackToDeleteNamePrompt = "\nPlease enter the exact name of the stack you wish to delete (case-insensitive):\nNOTE: ALL FLASHCARDS ASSOCIATED WITH THE STACK WILL ALSO BE DELETED.\n";
+
+        public readonly static string StackToViewNamePrompt = "\nPlease enter the exact name of the stack you wish to view (case-insensitive):\n";
 
         public readonly static string StackDoesNotExistMessage = "\nStack with name '{0}' does not exist. Please try again!\n";
 

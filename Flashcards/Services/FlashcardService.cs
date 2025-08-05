@@ -25,11 +25,26 @@
         {
             using var connection = new SqlConnection(DBHelper.ConnectionString);
             connection.Open();
-            string delCommand = @"DELETE FROM Flashcard WHERE Front = @Front AND StackId = @StackId";
-            connection.Execute(delCommand, new { Front = front, StackId = stackId });
+            string search = front;
+            var terms = search.Split(' ');
+            var delCommand = "DELETE FROM Flashcard WHERE StackId = @StackId";
+
+            for (int i = 0; i < terms.Length; i++)
+            {
+                delCommand += $" AND Front LIKE @term{i}";
+            }
+
+            var dynamicParams = new DynamicParameters();
+            dynamicParams.Add("StackId", stackId);
+
+            for (int i = 0; i < terms.Length; i++)
+            {
+                dynamicParams.Add($"term{i}", $"%{terms[i]}%");
+            }
+            connection.Execute(delCommand, dynamicParams);
         }
 
-        public Flashcard? GetFlashcard(string? front, int stackId)
+        public Flashcard? GetFlashcard(string front, int stackId)
         {
             if (front is null)
             {
@@ -37,8 +52,24 @@
             }
             using var connection = new SqlConnection(DBHelper.ConnectionString);
             connection.Open();
-            string getQuery = @"SELECT TOP 1 * FROM Flashcard WHERE Front = @Front AND StackId = @StackId";
-            return connection.QuerySingleOrDefault<Flashcard>(getQuery, new { Front = front, StackId = stackId });
+            string search = front;
+            var terms = search.Split(' ');
+            string getQuery = @"SELECT TOP 1 * FROM Flashcard WHERE StackId = @StackId";
+
+            for (int i = 0; i < terms.Length; i++)
+            {
+                getQuery += $" AND Front LIKE @term{i}";
+            }
+
+            var dynamicParams = new DynamicParameters();
+            dynamicParams.Add("StackId", stackId);
+
+            for (int i = 0; i < terms.Length; i++)
+            {
+                dynamicParams.Add($"term{i}", $"%{terms[i]}%");
+            }
+
+            return connection.QuerySingleOrDefault<Flashcard>(getQuery, dynamicParams);
         }
     }
 }

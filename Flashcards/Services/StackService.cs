@@ -1,6 +1,7 @@
 ﻿namespace Flashcards.Services
 {
     using Dapper;
+    using Flashcards.DTOs;
     using Flashcards.Models;
     using Flashcards.Services.Contracts;
     using Flashcards.Utils;
@@ -38,6 +39,17 @@
             connection.Open();
             string getQuery = @"SELECT TOP 1 * FROM Stack WHERE Name = @Name";
             return connection.QuerySingleOrDefault<Stack>(getQuery, new { Name = name.ToLower() });
+        }
+
+        public List<FlashcardDto> DisplayStack(int stackId)
+        {
+            using var connection = new SqlConnection(DBHelper.ConnectionString);
+            connection.Open();
+            string displayQuery = @"SELECT
+                                  ROW_NUMBER() OVER (ORDER BY Id) AS DisplayId, Front, Back FROM Flashcard 
+                                  WHERE StackId = @Id ORDER BY Id
+                                  ";
+            return connection.Query<FlashcardDto>(displayQuery, new { Id = stackId }).ToList();
         }
     }
 }

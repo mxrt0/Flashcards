@@ -43,14 +43,41 @@
                     AddStack();
                     break;
                 case 4:
+                    DisplayStack();
+                    break;
+                case 5:
                     DeleteStack();
                     break;
             }
             MainMenu();
         }
 
+        private void DisplayStack()
+        {
+            Console.Clear();
+
+            Console.WriteLine(Messages.StackToViewNamePrompt);
+            Console.WriteLine(Messages.ReturnToMainMenuMessage);
+
+            string? stackToDisplayName = Console.ReadLine();
+            CheckReturnToMainMenu(stackToDisplayName);
+            Stack? stackToDisplay = _stackService.GetStack(stackToDisplayName);
+            while (stackToDisplay is null)
+            {
+                Console.WriteLine(string.Format(Messages.StackDoesNotExistMessage, stackToDisplayName));
+                Console.WriteLine(Messages.ReturnToMainMenuMessage);
+                stackToDisplayName = Console.ReadLine();
+                CheckReturnToMainMenu(stackToDisplayName);
+                stackToDisplay = _stackService.GetStack(stackToDisplayName);
+            }
+            Console.WriteLine($"\nStack '{stackToDisplay.Name}':\n");
+            Console.WriteLine(string.Join(Environment.NewLine, _stackService.DisplayStack(stackToDisplay.Id)));
+        }
+
         private void DeleteStack()
         {
+            Console.Clear();
+
             Console.WriteLine(Messages.StackToDeleteNamePrompt);
             Console.WriteLine(Messages.ReturnToMainMenuMessage);
 
@@ -94,7 +121,7 @@
 
             while (_flashcardService.GetFlashcard(flashcardToDeleteFront, parentStack.Id) is null)
             {
-                Console.WriteLine(string.Format(Messages.FlashcardDoesNotExist, parentStack.Name));
+                Console.WriteLine(string.Format(Messages.FlashcardDoesNotExistMessage, parentStack.Name));
                 Console.WriteLine(Messages.ReturnToMainMenuMessage);
                 flashcardToDeleteFront = Console.ReadLine();
                 CheckReturnToMainMenu(flashcardToDeleteFront);
@@ -163,7 +190,7 @@
 
             while (_flashcardService.GetFlashcard(flashcardFront, parentStack.Id) is not null)
             {
-                Console.WriteLine(Messages.FlashcardAlreadyExists);
+                Console.WriteLine(Messages.FlashcardAlreadyExistsMessage);
                 Console.WriteLine(Messages.ReturnToMainMenuMessage);
                 flashcardFront = Console.ReadLine();
                 CheckReturnToMainMenu(flashcardFront);

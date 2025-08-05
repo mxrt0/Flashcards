@@ -1,5 +1,6 @@
 ﻿namespace Flashcards.Services.Contracts
 {
+    using Flashcards.DTOs;
     using Flashcards.Models;
     public interface IStackService
     {
@@ -8,5 +9,7 @@
         void DeleteStack(string name);
 
         Stack GetStack(string name);
+
+        List<FlashcardDto> DisplayStack(int id);
     }
 }
