@@ -28,7 +28,7 @@
 
         public readonly static string FlashcardAlreadyExistsMessage = "\nA flashcard with this question already exists in the stack you have selected. Please try again!\n";
 
-        public readonly static string FlashcardDoesNotExistMessage = "\nA flashcard with this name does not exist within the stack '{0}'!\n";
+        public readonly static string FlashcardDoesNotExistMessage = "\nA flashcard with this name does not exist within the stack '{0}'! Please try again: \n";
 
         public readonly static string SuccessfullyDeletedFlashcardMessage = "\nSuccessfully deleted flashcard from '{0}' stack!\n";
 
@@ -47,6 +47,24 @@
         public readonly static string SuccessfullyDeletedStackMessage = "\nSuccessfully deleted stack '{0}'!\n";
 
         public readonly static string InvalidStackNameMessage = "\nInvalid stack name. Please enter a non-null string of length equal to or less than 150 characters.\n";
+
+        // Study
+
+        public readonly static string NewStudySessionMessage = "\nWelcome to the 'Study area'!\n";
+
+        public readonly static string StudyStackMessage = "\nPlease choose a stack to study: \n";
+
+        public readonly static string AnswerQuestionPrompt = "\nYour answer to the question: ";
+
+        public readonly static string CorrectAnswerMessage = "\nSpot on! Good job!\n";
+
+        public readonly static string IncorrectAnswerMessage = "\nNot quite. The correct answer is actually '{0}'!\n";
+
+        public readonly static string ConcludeSessionMessage = "\nType 'End' to conclude this study session and return to the Main Menu or type 'Continue' to continue:\n";
+
+        public readonly static string InvalidSessionInputMessage = "\nPlease enter either 'End' or 'Continue':\n";
+
+        public readonly static string SessionConcludedMessage = "\nYour study session has concluded. Your score is: {0}\n";
 
     }
 

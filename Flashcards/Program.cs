@@ -11,7 +11,8 @@ namespace Flashcards
         {
             IStackService stackService = new StackService();
             IFlashcardService flashcardService = new FlashcardService();
-            var controller = new FlashcardController(flashcardService, stackService);
+            IStudySessionService studySessionService = new StudySessionService();
+            var controller = new FlashcardController(flashcardService, stackService, studySessionService);
         }
     }
 }

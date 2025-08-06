@@ -8,10 +8,12 @@
     {
         private readonly IFlashcardService _flashcardService;
         private readonly IStackService _stackService;
-        public FlashcardController(IFlashcardService flashcardService, IStackService stackService)
+        private readonly IStudySessionService _studySessionService;
+        public FlashcardController(IFlashcardService flashcardService, IStackService stackService, IStudySessionService studySessionService)
         {
             _flashcardService = flashcardService;
             _stackService = stackService;
+            _studySessionService = studySessionService;
             MainMenu();
         }
         public void MainMenu()
@@ -48,8 +50,91 @@
                 case 5:
                     DeleteStack();
                     break;
+                case 6:
+                    NewStudySession();
+                    break;
             }
             MainMenu();
+        }
+
+        private void NewStudySession()
+        {
+            Console.WriteLine(Messages.NewStudySessionMessage);
+
+            Console.WriteLine(Messages.StudyStackMessage);
+            Console.WriteLine(Messages.ReturnToMainMenuMessage);
+
+            string? stackToStudyName = Console.ReadLine();
+            CheckReturnToMainMenu(stackToStudyName);
+            Stack? stackToStudy = _stackService.GetStack(stackToStudyName);
+
+            while (stackToStudy is null)
+            {
+                Console.WriteLine(Messages.StackDoesNotExistMessage);
+                Console.WriteLine(Messages.ReturnToMainMenuMessage);
+                stackToStudyName = Console.ReadLine();
+                if (CheckReturnToMainMenu(stackToStudyName))
+                {
+                    break;
+                }
+                stackToStudy = _stackService.GetStack(stackToStudyName);
+            }
+
+            int currentScore = 0;
+
+            var flashcards = _flashcardService.GetFlashcardsInStack(stackToStudy.Id);
+
+            foreach (var flashcard in flashcards)
+            {
+                Console.WriteLine($"\n{flashcard.Front}");
+
+                Console.Write(Messages.AnswerQuestionPrompt);
+
+                string? userAnswer = Console.ReadLine();
+
+                if (flashcard.Back == userAnswer)
+                {
+                    Console.WriteLine(Messages.CorrectAnswerMessage);
+                    currentScore++;
+                }
+                else
+                {
+                    Console.WriteLine(string.Format(Messages.IncorrectAnswerMessage, flashcard.Back));
+                }
+
+                Console.WriteLine(Messages.ConcludeSessionMessage);
+                string? userInput = Console.ReadLine();
+                if (string.Equals(userInput, "end", StringComparison.OrdinalIgnoreCase))
+                {
+                    Console.WriteLine(string.Format(Messages.SessionConcludedMessage, currentScore));
+                    break;
+                }
+                else if (string.Equals(userInput, "continue", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+                else
+                {
+                    while (!string.Equals(userInput, "end", StringComparison.OrdinalIgnoreCase)
+                        && !string.Equals(userInput, "continue", StringComparison.OrdinalIgnoreCase))
+                    {
+                        Console.WriteLine(Messages.InvalidSessionInputMessage);
+                        userInput = Console.ReadLine();
+                    }
+
+                    if (string.Equals(userInput, "end", StringComparison.OrdinalIgnoreCase))
+                    {
+                        Console.WriteLine(string.Format(Messages.SessionConcludedMessage, currentScore));
+
+                        break;
+                    }
+                    else if (string.Equals(userInput, "continue", StringComparison.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+                }
+            }
+            _studySessionService.AddStudySession(DateTime.Now, currentScore, stackToStudy.Id);
         }
 
         private void DisplayStack()
@@ -168,7 +253,7 @@
             while (parentStack is null)
             {
                 Console.WriteLine(string.Format(Messages.StackDoesNotExistMessage, parentName));
-                Console.Write(Messages.ReturnToMainMenuMessage);
+                Console.WriteLine(Messages.ReturnToMainMenuMessage);
                 parentName = Console.ReadLine();
                 CheckReturnToMainMenu(parentName);
                 parentStack = _stackService.GetStack(parentName);
@@ -214,12 +299,14 @@
             Console.WriteLine(string.Format(Messages.SuccessfullyAddedFlashcardMessage, parentStack.Name));
         }
 
-        public void CheckReturnToMainMenu(string? input = "")
+        public bool CheckReturnToMainMenu(string? input = "")
         {
             if (input == "0")
             {
                 MainMenu();
+                return true;
             }
+            return false;
         }
     }
 }

@@ -5,6 +5,7 @@
     using Flashcards.Services.Contracts;
     using Flashcards.Utils;
     using Microsoft.Data.SqlClient;
+    using System.Collections.Generic;
 
     public class FlashcardService : IFlashcardService
     {
@@ -27,21 +28,9 @@
             connection.Open();
             string search = front;
             var terms = search.Split(' ');
-            var delCommand = "DELETE FROM Flashcard WHERE StackId = @StackId";
+            var delCommand = "DELETE FROM Flashcard WHERE StackId = @StackId AND Front = @Front";
 
-            for (int i = 0; i < terms.Length; i++)
-            {
-                delCommand += $" AND Front LIKE @term{i}";
-            }
-
-            var dynamicParams = new DynamicParameters();
-            dynamicParams.Add("StackId", stackId);
-
-            for (int i = 0; i < terms.Length; i++)
-            {
-                dynamicParams.Add($"term{i}", $"%{terms[i]}%");
-            }
-            connection.Execute(delCommand, dynamicParams);
+            connection.Execute(delCommand, new { StackId = stackId, Front = front });
         }
 
         public Flashcard? GetFlashcard(string front, int stackId)
@@ -52,24 +41,20 @@
             }
             using var connection = new SqlConnection(DBHelper.ConnectionString);
             connection.Open();
-            string search = front;
-            var terms = search.Split(' ');
-            string getQuery = @"SELECT TOP 1 * FROM Flashcard WHERE StackId = @StackId";
 
-            for (int i = 0; i < terms.Length; i++)
-            {
-                getQuery += $" AND Front LIKE @term{i}";
-            }
+            string getQuery = @"SELECT TOP 1 * FROM Flashcard WHERE StackId = @StackId AND Front = @Front";
 
-            var dynamicParams = new DynamicParameters();
-            dynamicParams.Add("StackId", stackId);
+            return connection.QuerySingleOrDefault<Flashcard>(getQuery, new { StackId = stackId, Front = front });
+        }
 
-            for (int i = 0; i < terms.Length; i++)
-            {
-                dynamicParams.Add($"term{i}", $"%{terms[i]}%");
-            }
+        public List<Flashcard> GetFlashcardsInStack(int stackId)
+        {
+            using var connection = new SqlConnection(DBHelper.ConnectionString);
+            connection.Open();
 
-            return connection.QuerySingleOrDefault<Flashcard>(getQuery, dynamicParams);
+            string getQuery = @"SELECT * FROM Flashcard WHERE StackId = @StackId";
+
+            return connection.Query<Flashcard>(getQuery, new { StackId = stackId }).ToList();
         }
     }
 }

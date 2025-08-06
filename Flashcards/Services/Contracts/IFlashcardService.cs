@@ -9,5 +9,7 @@ namespace Flashcards.Services.Contracts
         void DeleteFlashcard(string front, int stackId);
 
         Flashcard? GetFlashcard(string front, int stackId);
+
+        List<Flashcard> GetFlashcardsInStack(int stackId);
     }
 }

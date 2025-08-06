@@ -13,7 +13,8 @@
             Console.WriteLine("\nType 2 to Delete Flashcard");
             Console.WriteLine("\nType 3 to Add New Stack");
             Console.WriteLine("\nType 4 to View Stack");
-            Console.WriteLine("\nType 5 to Delete Stack\n");
+            Console.WriteLine("\nType 5 to Delete Stack");
+            Console.WriteLine("\nType 6 to Start New Study Session\n");
         }
     }
 }
