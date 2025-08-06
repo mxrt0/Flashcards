@@ -12,7 +12,7 @@
 
         // Flashcard
 
-        public readonly static string FlashcardStackParentPrompt = "\nPlease enter the exact name (case-insensitive) of the stack your flash card will belong to (if it does not exist yet, you must first create it):\n";
+        public readonly static string FlashcardStackParentPrompt = "\nPlease enter the name of the stack your flash card will belong to (it must already exist):\n";
 
         public readonly static string FlashcardToDeleteStackParentPrompt = "\nPlease enter the exact name of the stack the flashcard you wish to delete belongs to (case-insensitive):\n";
 
@@ -40,7 +40,11 @@
 
         public readonly static string StackToViewNamePrompt = "\nPlease enter the exact name of the stack you wish to view (case-insensitive):\n";
 
+        public readonly static string StackToViewFlashcardCountPrompt = "\nPlease enter the number of flashcards you wish to retrieve from this stack. Enter 'all' to retrieve all: \n";
+
         public readonly static string StackDoesNotExistMessage = "\nStack with name '{0}' does not exist. Please try again!\n";
+
+        public readonly static string InvalidFlashcardCountMessage = "\nInvalid flashcard count. Please enter 'All' or a non-negative number less than the total number of flashcards in the stack: \n";
 
         public readonly static string SucccessfullyAddedStackMessage = "\nSuccessfully added new stack '{0}'!\n";
 
@@ -52,7 +56,7 @@
 
         public readonly static string NewStudySessionMessage = "\nWelcome to the 'Study area'!\n";
 
-        public readonly static string StudyStackMessage = "\nPlease choose a stack to study: \n";
+        public readonly static string StudyStackMessage = "\nPlease choose a stack of flashcards to study: \n";
 
         public readonly static string AnswerQuestionPrompt = "\nYour answer to the question: ";
 

@@ -41,15 +41,23 @@
             return connection.QuerySingleOrDefault<Stack>(getQuery, new { Name = name.ToLower() });
         }
 
-        public List<FlashcardDto> DisplayStack(int stackId)
+        public List<FlashcardDto> DisplayStack(int stackId, int numberOfFlashcards)
         {
             using var connection = new SqlConnection(DBHelper.ConnectionString);
             connection.Open();
-            string displayQuery = @"SELECT
+            string displayQuery = @$"SELECT TOP {numberOfFlashcards}
                                   ROW_NUMBER() OVER (ORDER BY Id) AS DisplayId, Front, Back FROM Flashcard 
                                   WHERE StackId = @Id ORDER BY Id
                                   ";
             return connection.Query<FlashcardDto>(displayQuery, new { Id = stackId }).ToList();
+        }
+
+        public int GetNumberOfFlashcardsInStack(int stackId)
+        {
+            using var connection = new SqlConnection(DBHelper.ConnectionString);
+            connection.Open();
+            string command = @"SELECT * FROM Flashcard WHERE StackId = @StackId";
+            return connection.Query<Flashcard>(command, new { StackId = stackId }).Count();
         }
     }
 }

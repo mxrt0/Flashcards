@@ -51,13 +51,13 @@
                     DeleteStack();
                     break;
                 case 6:
-                    NewStudySession();
+                    CreateNewStudySession();
                     break;
             }
             MainMenu();
         }
 
-        private void NewStudySession()
+        private void CreateNewStudySession()
         {
             Console.WriteLine(Messages.NewStudySessionMessage);
 
@@ -155,8 +155,39 @@
                 CheckReturnToMainMenu(stackToDisplayName);
                 stackToDisplay = _stackService.GetStack(stackToDisplayName);
             }
+            int numberOfAllFlashcards = _stackService.GetNumberOfFlashcardsInStack(stackToDisplay.Id);
+
+            Console.WriteLine(Messages.StackToViewFlashcardCountPrompt);
+            string? flashcardCount = Console.ReadLine();
+            int numberOfFlashcardsToDisplay = 0;
+            if (string.Equals(flashcardCount, "all", StringComparison.OrdinalIgnoreCase))
+            {
+                numberOfFlashcardsToDisplay = numberOfAllFlashcards;
+            }
+            else
+            {
+                while (!int.TryParse(flashcardCount, out _)
+                 || int.Parse(flashcardCount) < 0 || int.Parse(flashcardCount) > numberOfAllFlashcards)
+                {
+                    Console.WriteLine(Messages.InvalidFlashcardCountMessage);
+                    Console.WriteLine(Messages.ReturnToMainMenuMessage);
+                    flashcardCount = Console.ReadLine();
+                    CheckReturnToMainMenu(flashcardCount);
+                    if (string.Equals(flashcardCount, "all", StringComparison.OrdinalIgnoreCase))
+                    {
+                        numberOfFlashcardsToDisplay = numberOfAllFlashcards;
+                        break;
+                    }
+                }
+
+                if (numberOfFlashcardsToDisplay != numberOfAllFlashcards)
+                {
+                    numberOfFlashcardsToDisplay = int.Parse(flashcardCount);
+                }
+            }
+
             Console.WriteLine($"\nStack '{stackToDisplay.Name}':\n");
-            Console.WriteLine(string.Join(Environment.NewLine, _stackService.DisplayStack(stackToDisplay.Id)));
+            Console.WriteLine(string.Join(Environment.NewLine, _stackService.DisplayStack(stackToDisplay.Id, numberOfFlashcardsToDisplay)));
         }
 
         private void DeleteStack()

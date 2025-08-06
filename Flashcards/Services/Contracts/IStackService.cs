@@ -10,6 +10,8 @@
 
         Stack GetStack(string name);
 
-        List<FlashcardDto> DisplayStack(int id);
+        List<FlashcardDto> DisplayStack(int id, int flashcardsNum);
+
+        int GetNumberOfFlashcardsInStack(int id);
     }
 }
