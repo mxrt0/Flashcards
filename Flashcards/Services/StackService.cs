@@ -59,5 +59,13 @@
             string command = @"SELECT * FROM Flashcard WHERE StackId = @StackId";
             return connection.Query<Flashcard>(command, new { StackId = stackId }).Count();
         }
+
+        public List<Stack> GetAllStacks()
+        {
+            using var connection = new SqlConnection(DBHelper.ConnectionString);
+            connection.Open();
+            string getAllQuery = @"SELECT * FROM Stack";
+            return connection.Query<Stack>(getAllQuery).ToList();
+        }
     }
 }

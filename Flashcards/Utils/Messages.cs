@@ -16,9 +16,13 @@
 
         public readonly static string FlashcardToDeleteStackParentPrompt = "\nPlease enter the name of the stack the flashcard you wish to delete belongs to (case-insensitive):\n";
 
+        public readonly static string FlashcardToEditStackParentPrompt = "\nPlease enter the name of the stack the flashcard you wish to edit belongs to (case-insensitive):\n";
+
         public readonly static string FlashcardQuestionPrompt = "\nPlease enter the question on your flash card's front side (up to 255 characters):\n ";
 
         public readonly static string FlashcardToDeleteIDPrompt = "\nPlease enter the ID of the flashcard you wish to delete:\n ";
+
+        public readonly static string FlashcardToEditIDPrompt = "\nPlease enter the ID of the flashcard you wish to edit:\n ";
 
         public readonly static string InvalidFlashcardIDMessage = "\nInvalid flashcard ID. Please enter a positive number less than or equal to the ID of the last flashcard in the stack:\n";
 
@@ -33,6 +37,8 @@
         public readonly static string FlashcardDoesNotExistMessage = "\nA flashcard with this name does not exist within the stack '{0}'! Please try again: \n";
 
         public readonly static string SuccessfullyDeletedFlashcardMessage = "\nSuccessfully deleted flashcard from '{0}' stack!\n";
+
+        public readonly static string SuccessfullyEditedFlashcardMessage = "\nSuccessfully edited flashcard from '{0}' stack!\n";
 
         // Stack 
 

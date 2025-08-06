@@ -30,6 +30,15 @@
             connection.Execute(delCommand, new { StackId = stackId, Front = front });
         }
 
+        public void EditFlashcard(string currentFront, string newFront, string newBack, int stackId)
+        {
+            using var connection = new SqlConnection(DBHelper.ConnectionString);
+            connection.Open();
+            string editCommand = @"UPDATE Flashcard SET Front = @NewFront, Back = @NewBack 
+                                    WHERE Front = @CurrentFront AND StackId = @StackId";
+            connection.Execute(editCommand, new { NewFront = newFront, NewBack = newBack, CurrentFront = currentFront, StackId = stackId });
+        }
+
         public Flashcard? GetFlashcard(string front, int stackId)
         {
             if (front is null)

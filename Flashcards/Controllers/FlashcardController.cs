@@ -53,8 +53,95 @@
                 case 6:
                     CreateNewStudySession();
                     break;
+                case 7:
+                    EditFlashcard();
+                    break;
+                case 8:
+                    //EditStack();
+                    break;
             }
             MainMenu();
+        }
+
+        private void EditFlashcard()
+        {
+            Console.Clear();
+
+            Console.WriteLine(Messages.FlashcardToEditStackParentPrompt);
+            Console.WriteLine(Messages.ReturnToMainMenuMessage);
+
+            string? parentName = Console.ReadLine();
+            CheckReturnToMainMenu(parentName);
+
+            Stack? parentStack = _stackService.GetStack(parentName.ToLower());
+            while (parentStack is null)
+            {
+                Console.WriteLine(string.Format(Messages.InvalidStackNameMessage, parentName));
+                Console.WriteLine(Messages.ReturnToMainMenuMessage);
+                parentName = Console.ReadLine();
+                CheckReturnToMainMenu(parentName);
+            }
+            var allFlashcardsCount = _stackService.GetNumberOfFlashcardsInStack(parentStack.Id);
+            var flashcardsInStack = _stackService.GetFlashcards(parentStack.Id, allFlashcardsCount);
+            Console.WriteLine(string.Join(Environment.NewLine, flashcardsInStack));
+
+            Console.WriteLine("\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
+            Console.WriteLine(Messages.FlashcardToEditIDPrompt);
+            Console.WriteLine(Messages.ReturnToMainMenuMessage);
+            Console.WriteLine("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
+            string? flashcardToEditID = Console.ReadLine();
+            CheckReturnToMainMenu(flashcardToEditID);
+
+            while (!int.TryParse(flashcardToEditID, out _) || int.Parse(flashcardToEditID) < 0
+                || int.Parse(flashcardToEditID) > allFlashcardsCount)
+            {
+                Console.WriteLine(Messages.InvalidFlashcardIDMessage);
+                Console.WriteLine(Messages.ReturnToMainMenuMessage);
+                flashcardToEditID = Console.ReadLine();
+                CheckReturnToMainMenu(flashcardToEditID);
+            }
+
+            var flashcardToEdit = flashcardsInStack[int.Parse(flashcardToEditID) - 1];
+
+            Console.WriteLine(Messages.FlashcardQuestionPrompt);
+            Console.WriteLine(Messages.ReturnToMainMenuMessage);
+
+            string? flashcardFront = Console.ReadLine();
+            CheckReturnToMainMenu(parentName);
+
+            while (!Validator.IsFlashcardTextValid(flashcardFront))
+            {
+                Console.WriteLine(Messages.InvalidFlashcardTextMessage);
+                Console.WriteLine(Messages.ReturnToMainMenuMessage);
+                flashcardFront = Console.ReadLine();
+                CheckReturnToMainMenu(flashcardFront);
+            }
+
+            while (_flashcardService.GetFlashcard(flashcardFront, parentStack.Id) is not null)
+            {
+                Console.WriteLine(Messages.FlashcardAlreadyExistsMessage);
+                Console.WriteLine(Messages.ReturnToMainMenuMessage);
+                flashcardFront = Console.ReadLine();
+                CheckReturnToMainMenu(flashcardFront);
+            }
+
+            Console.WriteLine(Messages.FlashcardBackPrompt);
+            Console.WriteLine(Messages.ReturnToMainMenuMessage);
+
+            string? flashcardBack = Console.ReadLine();
+            CheckReturnToMainMenu(flashcardBack);
+
+            while (!Validator.IsFlashcardTextValid(flashcardBack))
+            {
+                Console.WriteLine(Messages.InvalidFlashcardTextMessage);
+                Console.WriteLine(Messages.ReturnToMainMenuMessage);
+                flashcardBack = Console.ReadLine();
+                CheckReturnToMainMenu(flashcardBack);
+            }
+
+
+            _flashcardService.EditFlashcard(flashcardToEdit.Front, flashcardFront, flashcardBack, parentStack.Id);
+            Console.WriteLine(string.Format(Messages.SuccessfullyEditedFlashcardMessage, parentStack.Name));
         }
 
         private void CreateNewStudySession()
@@ -193,6 +280,10 @@
         {
             Console.Clear();
 
+            Console.WriteLine("Your stacks:\n");
+            var allStacks = _stackService.GetAllStacks();
+            Console.WriteLine(string.Join($"\n- - - - - - - - - - - -{Environment.NewLine}", allStacks.Select(s => s.Name)));
+
             Console.WriteLine(Messages.StackToDeleteNamePrompt);
             Console.WriteLine(Messages.ReturnToMainMenuMessage);
 
@@ -213,6 +304,8 @@
 
         private void DeleteFlashcard()
         {
+            Console.Clear();
+
             Console.WriteLine(Messages.FlashcardToDeleteStackParentPrompt);
             Console.WriteLine(Messages.ReturnToMainMenuMessage);
 
@@ -231,8 +324,10 @@
             var flashcardsInStack = _stackService.GetFlashcards(parentStack.Id, allFlashcardsCount);
             Console.WriteLine(string.Join(Environment.NewLine, flashcardsInStack));
 
+            Console.WriteLine("\n- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -");
             Console.WriteLine(Messages.FlashcardToDeleteIDPrompt);
             Console.WriteLine(Messages.ReturnToMainMenuMessage);
+            Console.WriteLine("- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -\n");
             string? flashcardToDeleteID = Console.ReadLine();
             CheckReturnToMainMenu(flashcardToDeleteID);
 

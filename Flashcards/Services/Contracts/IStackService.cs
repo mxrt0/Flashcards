@@ -13,5 +13,7 @@
         List<FlashcardDto> GetFlashcards(int id, int flashcardsNum);
 
         int GetNumberOfFlashcardsInStack(int id);
+
+        List<Stack> GetAllStacks();
     }
 }

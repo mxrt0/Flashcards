@@ -11,5 +11,8 @@ namespace Flashcards.Services.Contracts
         Flashcard? GetFlashcard(string front, int stackId);
 
         List<Flashcard> GetFlashcardsInStack(int stackId);
+
+        void EditFlashcard(string currentFront, string newFront, string newBack, int stackId);
+
     }
 }
