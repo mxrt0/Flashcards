@@ -41,7 +41,7 @@
             return connection.QuerySingleOrDefault<Stack>(getQuery, new { Name = name.ToLower() });
         }
 
-        public List<FlashcardDto> DisplayStack(int stackId, int numberOfFlashcards)
+        public List<FlashcardDto> GetFlashcards(int stackId, int numberOfFlashcards)
         {
             using var connection = new SqlConnection(DBHelper.ConnectionString);
             connection.Open();

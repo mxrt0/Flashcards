@@ -106,7 +106,7 @@
                 string? userInput = Console.ReadLine();
                 if (string.Equals(userInput, "end", StringComparison.OrdinalIgnoreCase))
                 {
-                    Console.WriteLine(string.Format(Messages.SessionConcludedMessage, currentScore));
+                    Console.WriteLine(string.Format(Messages.SessionConcludedMessage, currentScore, _stackService.GetNumberOfFlashcardsInStack(stackToStudy.Id)));
                     break;
                 }
                 else if (string.Equals(userInput, "continue", StringComparison.OrdinalIgnoreCase))
@@ -124,8 +124,7 @@
 
                     if (string.Equals(userInput, "end", StringComparison.OrdinalIgnoreCase))
                     {
-                        Console.WriteLine(string.Format(Messages.SessionConcludedMessage, currentScore));
-
+                        Console.WriteLine(string.Format(Messages.SessionConcludedMessage, currentScore, _stackService.GetNumberOfFlashcardsInStack(stackToStudy.Id)));
                         break;
                     }
                     else if (string.Equals(userInput, "continue", StringComparison.OrdinalIgnoreCase))
@@ -187,7 +186,7 @@
             }
 
             Console.WriteLine($"\nStack '{stackToDisplay.Name}':\n");
-            Console.WriteLine(string.Join(Environment.NewLine, _stackService.DisplayStack(stackToDisplay.Id, numberOfFlashcardsToDisplay)));
+            Console.WriteLine(string.Join(Environment.NewLine, _stackService.GetFlashcards(stackToDisplay.Id, numberOfFlashcardsToDisplay)));
         }
 
         private void DeleteStack()
@@ -228,22 +227,26 @@
                 parentName = Console.ReadLine();
                 CheckReturnToMainMenu(parentName);
             }
+            var allFlashcardsCount = _stackService.GetNumberOfFlashcardsInStack(parentStack.Id);
+            var flashcardsInStack = _stackService.GetFlashcards(parentStack.Id, allFlashcardsCount);
+            Console.WriteLine(string.Join(Environment.NewLine, flashcardsInStack));
 
-            Console.WriteLine(Messages.FlashcardToDeleteQuestionPrompt);
+            Console.WriteLine(Messages.FlashcardToDeleteIDPrompt);
             Console.WriteLine(Messages.ReturnToMainMenuMessage);
+            string? flashcardToDeleteID = Console.ReadLine();
+            CheckReturnToMainMenu(flashcardToDeleteID);
 
-            string? flashcardToDeleteFront = Console.ReadLine();
-            CheckReturnToMainMenu(flashcardToDeleteFront);
-
-            while (_flashcardService.GetFlashcard(flashcardToDeleteFront, parentStack.Id) is null)
+            while (!int.TryParse(flashcardToDeleteID, out _) || int.Parse(flashcardToDeleteID) < 0
+                || int.Parse(flashcardToDeleteID) > allFlashcardsCount)
             {
-                Console.WriteLine(string.Format(Messages.FlashcardDoesNotExistMessage, parentStack.Name));
+                Console.WriteLine(Messages.InvalidFlashcardIDMessage);
                 Console.WriteLine(Messages.ReturnToMainMenuMessage);
-                flashcardToDeleteFront = Console.ReadLine();
-                CheckReturnToMainMenu(flashcardToDeleteFront);
+                flashcardToDeleteID = Console.ReadLine();
+                CheckReturnToMainMenu(flashcardToDeleteID);
             }
 
-            _flashcardService.DeleteFlashcard(flashcardToDeleteFront, parentStack.Id);
+            var flashcardToDelete = flashcardsInStack[int.Parse(flashcardToDeleteID) - 1];
+            _flashcardService.DeleteFlashcard(flashcardToDelete.Front, parentStack.Id);
             Console.WriteLine(string.Format(Messages.SuccessfullyDeletedFlashcardMessage, parentStack.Name));
         }
 

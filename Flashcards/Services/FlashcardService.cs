@@ -26,10 +26,7 @@
         {
             using var connection = new SqlConnection(DBHelper.ConnectionString);
             connection.Open();
-            string search = front;
-            var terms = search.Split(' ');
             var delCommand = "DELETE FROM Flashcard WHERE StackId = @StackId AND Front = @Front";
-
             connection.Execute(delCommand, new { StackId = stackId, Front = front });
         }
 

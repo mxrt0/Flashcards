@@ -14,11 +14,13 @@
 
         public readonly static string FlashcardStackParentPrompt = "\nPlease enter the name of the stack your flash card will belong to (it must already exist):\n";
 
-        public readonly static string FlashcardToDeleteStackParentPrompt = "\nPlease enter the exact name of the stack the flashcard you wish to delete belongs to (case-insensitive):\n";
+        public readonly static string FlashcardToDeleteStackParentPrompt = "\nPlease enter the name of the stack the flashcard you wish to delete belongs to (case-insensitive):\n";
 
         public readonly static string FlashcardQuestionPrompt = "\nPlease enter the question on your flash card's front side (up to 255 characters):\n ";
 
-        public readonly static string FlashcardToDeleteQuestionPrompt = "\nPlease enter the question on the front side of the flashcard you wish to delete:\n ";
+        public readonly static string FlashcardToDeleteIDPrompt = "\nPlease enter the ID of the flashcard you wish to delete:\n ";
+
+        public readonly static string InvalidFlashcardIDMessage = "\nInvalid flashcard ID. Please enter a positive number less than or equal to the ID of the last flashcard in the stack:\n";
 
         public readonly static string FlashcardBackPrompt = "\nPlease enter the answer on your flash card's back side (up to 255 characters):\n ";
 
@@ -68,7 +70,7 @@
 
         public readonly static string InvalidSessionInputMessage = "\nPlease enter either 'End' or 'Continue':\n";
 
-        public readonly static string SessionConcludedMessage = "\nYour study session has concluded. Your score is: {0}\n";
+        public readonly static string SessionConcludedMessage = "\nYour study session has concluded. You got {0} right out of {1}\n";
 
     }
 

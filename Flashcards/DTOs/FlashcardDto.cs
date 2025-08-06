@@ -12,9 +12,9 @@ namespace Flashcards.DTOs
         {
             var sb = new StringBuilder();
             sb.AppendLine("\n{");
-            sb.AppendLine($"    Flashcard ID: {DisplayId}");
-            sb.AppendLine($"    Question: {Front}");
-            sb.AppendLine($"    Answer: {Back}");
+            sb.AppendLine($"    ID: {DisplayId}");
+            sb.AppendLine($"    Front: {Front}");
+            sb.AppendLine($"    Back: {Back}");
             sb.AppendLine("}\n");
             return sb.ToString().TrimEnd();
         }
