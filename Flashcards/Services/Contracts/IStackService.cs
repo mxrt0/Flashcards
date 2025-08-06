@@ -15,5 +15,7 @@
         int GetNumberOfFlashcardsInStack(int id);
 
         List<Stack> GetAllStacks();
+
+        void EditStack(string currentName, string newName);
     }
 }

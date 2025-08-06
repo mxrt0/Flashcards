@@ -67,5 +67,14 @@
             string getAllQuery = @"SELECT * FROM Stack";
             return connection.Query<Stack>(getAllQuery).ToList();
         }
+
+        public void EditStack(string currentName, string newName)
+        {
+            using var connection = new SqlConnection(DBHelper.ConnectionString);
+            connection.Open();
+            string editCommand = @"UPDATE Stack SET Name = @NewName
+                                    WHERE Name = @CurrentName";
+            connection.Execute(editCommand, new { NewName = newName, CurrentName = currentName });
+        }
     }
 }

@@ -57,15 +57,59 @@
                     EditFlashcard();
                     break;
                 case 8:
-                    //EditStack();
+                    EditStack();
                     break;
             }
             MainMenu();
         }
 
+        private void EditStack()
+        {
+
+            Console.Clear();
+
+            DisplayAllStacks();
+
+            Console.WriteLine(Messages.StackToEditNamePrompt);
+            Console.WriteLine(Messages.ReturnToMainMenuMessage);
+
+            string? stackToEditName = Console.ReadLine();
+            CheckReturnToMainMenu(stackToEditName);
+
+            while (_stackService.GetStack(stackToEditName) is null)
+            {
+                Console.WriteLine(string.Format(Messages.StackDoesNotExistMessage, stackToEditName));
+                Console.WriteLine(Messages.ReturnToMainMenuMessage);
+                stackToEditName = Console.ReadLine();
+                CheckReturnToMainMenu(stackToEditName);
+            }
+
+            Console.WriteLine(Messages.StackNamePrompt);
+            Console.WriteLine(Messages.ReturnToMainMenuMessage);
+
+            string? newStackName = Console.ReadLine();
+            CheckReturnToMainMenu(newStackName);
+
+            while (!Validator.IsStackNameValid(newStackName))
+            {
+                Console.WriteLine(Messages.InvalidStackNameMessage);
+                Console.WriteLine(Messages.ReturnToMainMenuMessage);
+                newStackName = Console.ReadLine();
+                CheckReturnToMainMenu(newStackName);
+            }
+
+            _stackService.EditStack(stackToEditName, newStackName);
+            Console.WriteLine(string.Format(Messages.SuccessfullyEditedStackMessage, stackToEditName));
+
+            Console.WriteLine(Messages.PressAnyKeyToContinueMessage);
+            Console.ReadKey();
+        }
+
         private void EditFlashcard()
         {
             Console.Clear();
+
+            DisplayAllStacks();
 
             Console.WriteLine(Messages.FlashcardToEditStackParentPrompt);
             Console.WriteLine(Messages.ReturnToMainMenuMessage);
@@ -142,11 +186,18 @@
 
             _flashcardService.EditFlashcard(flashcardToEdit.Front, flashcardFront, flashcardBack, parentStack.Id);
             Console.WriteLine(string.Format(Messages.SuccessfullyEditedFlashcardMessage, parentStack.Name));
+
+            Console.WriteLine(Messages.PressAnyKeyToContinueMessage);
+            Console.ReadKey();
         }
 
         private void CreateNewStudySession()
         {
+            Console.Clear();
+
             Console.WriteLine(Messages.NewStudySessionMessage);
+
+            DisplayAllStacks();
 
             Console.WriteLine(Messages.StudyStackMessage);
             Console.WriteLine(Messages.ReturnToMainMenuMessage);
@@ -221,6 +272,8 @@
                 }
             }
             _studySessionService.AddStudySession(DateTime.Now, currentScore, stackToStudy.Id);
+            Console.WriteLine(Messages.PressAnyKeyToContinueMessage);
+            Console.ReadKey();
         }
 
         private void DisplayStack()
@@ -274,15 +327,16 @@
 
             Console.WriteLine($"\nStack '{stackToDisplay.Name}':\n");
             Console.WriteLine(string.Join(Environment.NewLine, _stackService.GetFlashcards(stackToDisplay.Id, numberOfFlashcardsToDisplay)));
+
+            Console.WriteLine(Messages.PressAnyKeyToContinueMessage);
+            Console.ReadKey();
         }
 
         private void DeleteStack()
         {
             Console.Clear();
 
-            Console.WriteLine("Your stacks:\n");
-            var allStacks = _stackService.GetAllStacks();
-            Console.WriteLine(string.Join($"\n- - - - - - - - - - - -{Environment.NewLine}", allStacks.Select(s => s.Name)));
+            DisplayAllStacks();
 
             Console.WriteLine(Messages.StackToDeleteNamePrompt);
             Console.WriteLine(Messages.ReturnToMainMenuMessage);
@@ -305,6 +359,8 @@
         private void DeleteFlashcard()
         {
             Console.Clear();
+
+            DisplayAllStacks();
 
             Console.WriteLine(Messages.FlashcardToDeleteStackParentPrompt);
             Console.WriteLine(Messages.ReturnToMainMenuMessage);
@@ -343,11 +399,16 @@
             var flashcardToDelete = flashcardsInStack[int.Parse(flashcardToDeleteID) - 1];
             _flashcardService.DeleteFlashcard(flashcardToDelete.Front, parentStack.Id);
             Console.WriteLine(string.Format(Messages.SuccessfullyDeletedFlashcardMessage, parentStack.Name));
+
+            Console.WriteLine(Messages.PressAnyKeyToContinueMessage);
+            Console.ReadKey();
         }
 
         private void AddStack()
         {
             Console.Clear();
+
+            DisplayAllStacks();
 
             Console.WriteLine(Messages.StackNamePrompt);
             Console.WriteLine(Messages.ReturnToMainMenuMessage);
@@ -363,14 +424,34 @@
                 CheckReturnToMainMenu(stackName);
             }
 
+            while (_stackService.GetStack(stackName) is not null)
+            {
+                Console.WriteLine(string.Format(Messages.StackAlreadyExistsMessage, stackName));
+                Console.WriteLine(Messages.ReturnToMainMenuMessage);
+                stackName = Console.ReadLine();
+                CheckReturnToMainMenu(stackName);
+
+                while (!Validator.IsStackNameValid(stackName))
+                {
+                    Console.WriteLine(Messages.InvalidStackNameMessage);
+                    Console.WriteLine(Messages.ReturnToMainMenuMessage);
+                    stackName = Console.ReadLine();
+                    CheckReturnToMainMenu(stackName);
+                }
+            }
             _stackService.AddStack(stackName);
-            Console.WriteLine(string.Format(Messages.SucccessfullyAddedStackMessage, stackName));
+            Console.WriteLine(string.Format(Messages.SuccessfullyAddedStackMessage, stackName));
+
+            Console.WriteLine(Messages.PressAnyKeyToContinueMessage);
+            Console.ReadKey();
         }
 
 
         private void AddFlashcard()
         {
             Console.Clear();
+
+            DisplayAllStacks();
 
             Console.WriteLine(Messages.FlashcardStackParentPrompt);
             Console.WriteLine(Messages.ReturnToMainMenuMessage);
@@ -426,6 +507,9 @@
 
             _flashcardService.AddFlashcard(flashcardFront, flashcardBack, parentStack.Id);
             Console.WriteLine(string.Format(Messages.SuccessfullyAddedFlashcardMessage, parentStack.Name));
+
+            Console.WriteLine(Messages.PressAnyKeyToContinueMessage);
+            Console.ReadKey();
         }
 
         public bool CheckReturnToMainMenu(string? input = "")
@@ -436,6 +520,13 @@
                 return true;
             }
             return false;
+        }
+
+        public void DisplayAllStacks()
+        {
+            Console.WriteLine("Your stacks:\n");
+            var allStacks = _stackService.GetAllStacks();
+            Console.WriteLine(string.Join($"\n- - - - - - - - - - - -{Environment.NewLine}", allStacks.Select(s => s.Name)));
         }
     }
 }

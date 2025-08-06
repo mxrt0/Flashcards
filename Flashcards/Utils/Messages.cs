@@ -2,8 +2,11 @@
 {
     public static class Messages
     {
-        // Main Menu 
+        // Main
+
         public readonly static string ReturnToMainMenuMessage = "You can type 0 to return to the Main Menu:\n";
+
+        public readonly static string PressAnyKeyToContinueMessage = "\nPress any key to continue...\n";
 
         // User Input
 
@@ -42,9 +45,11 @@
 
         // Stack 
 
-        public readonly static string StackNamePrompt = "\nPlease enter a name for your new stack (up to 150 characters):\n";
+        public readonly static string StackNamePrompt = "\nPlease enter a name for your stack (up to 150 characters):\n";
 
         public readonly static string StackToDeleteNamePrompt = "\nPlease enter the exact name of the stack you wish to delete (case-insensitive):\nNOTE: ALL FLASHCARDS ASSOCIATED WITH THE STACK WILL ALSO BE DELETED.\n";
+
+        public readonly static string StackToEditNamePrompt = "\nPlease enter the exact name of the stack you wish to edit (case-insensitive):\n";
 
         public readonly static string StackToViewNamePrompt = "\nPlease enter the exact name of the stack you wish to view (case-insensitive):\n";
 
@@ -52,9 +57,13 @@
 
         public readonly static string StackDoesNotExistMessage = "\nStack with name '{0}' does not exist. Please try again!\n";
 
+        public readonly static string StackAlreadyExistsMessage = "\nStack with name '{0}' already exists. Please try again!\n";
+
         public readonly static string InvalidFlashcardCountMessage = "\nInvalid flashcard count. Please enter 'All' or a non-negative number less than the total number of flashcards in the stack: \n";
 
-        public readonly static string SucccessfullyAddedStackMessage = "\nSuccessfully added new stack '{0}'!\n";
+        public readonly static string SuccessfullyAddedStackMessage = "\nSuccessfully added new stack '{0}'!\n";
+
+        public readonly static string SuccessfullyEditedStackMessage = "\nSuccessfully edited stack '{0}'!\n";
 
         public readonly static string SuccessfullyDeletedStackMessage = "\nSuccessfully deleted stack '{0}'!\n";
 

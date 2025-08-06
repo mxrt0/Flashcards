@@ -5,7 +5,7 @@
         public readonly static int NumberOfOptions = 9;
         public static void DisplayOptions()
         {
-            Console.WriteLine("\nMAIN MENU\n");
+            Console.WriteLine("\n\nMAIN MENU\n");
             Console.WriteLine("- - - - - - - - - - - - - - - - - - - - - -");
             Console.WriteLine("\nWhat would you like to do?");
             Console.WriteLine("\nType 0 to Exit Application");
