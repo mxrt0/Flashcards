@@ -59,8 +59,22 @@
                 case 8:
                     EditStack();
                     break;
+                case 9:
+                    ViewAllSessions();
+                    break;
+
             }
             MainMenu();
+        }
+
+        private void ViewAllSessions()
+        {
+            Console.WriteLine("\nYour study sessions: ");
+            var sessions = _studySessionService.GetAllStudySessions();
+            Console.WriteLine(string.Join(Environment.NewLine, sessions));
+
+            Console.WriteLine(Messages.PressAnyKeyToContinueMessage);
+            Console.ReadKey();
         }
 
         private void EditStack()

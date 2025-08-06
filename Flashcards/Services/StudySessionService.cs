@@ -1,4 +1,5 @@
 ﻿using Dapper;
+using Flashcards.Models;
 using Flashcards.Services.Contracts;
 using Flashcards.Utils;
 using Microsoft.Data.SqlClient;
@@ -14,9 +15,16 @@ namespace Flashcards.Services
             var addCommand = @"INSERT INTO StudySession(SessionDate, Score, StackId) VALUES(@Date, @Score, @StackId)";
             connection.Execute(addCommand, new { Date = date, Score = score, StackId = stackId });
         }
-        public void GetStudySession(int id)
+
+        public List<StudySession> GetAllStudySessions()
         {
-            throw new NotImplementedException();
+            using var connection = new SqlConnection(DBHelper.ConnectionString);
+            connection.Open();
+            var getAllQuery = @"SELECT 
+                              ROW_NUMBER() OVER (ORDER BY Id) AS SessionId,
+                              SessionDate,
+                              Score FROM StudySession";
+            return connection.Query<StudySession>(getAllQuery).ToList();
         }
     }
 }
