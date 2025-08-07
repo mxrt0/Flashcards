@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<configuration>
+	<connectionStrings>
+		<add name="DefaultConnectionString" connectionString="Data Source=localhost;Initial Catalog={YourDB};Integrated Security=True;Encrypt=False;Trust Server Certificate=True"/>
+	</connectionStrings>
+</configuration>
