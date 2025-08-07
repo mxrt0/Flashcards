@@ -15,5 +15,9 @@
         {
             return !string.IsNullOrEmpty(text) && text.Length <= 255;
         }
+        public static bool IsYearValid(string? year = "")
+        {
+            return !string.IsNullOrEmpty(year) && int.TryParse(year, out _) && int.Parse(year) >= 1;
+        }
     }
 }

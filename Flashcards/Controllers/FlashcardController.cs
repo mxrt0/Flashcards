@@ -62,9 +62,50 @@
                 case 9:
                     ViewAllSessions();
                     break;
+                case 10:
+                    MonthlySessionsCountReport();
+                    break;
+                case 11:
+                    MonthlyAverageScoreReport();
+                    break;
 
             }
             MainMenu();
+        }
+
+        private void MonthlyAverageScoreReport()
+        {
+            Console.Clear();
+
+            Console.WriteLine(Messages.MonthlyReportYearMessage);
+            Console.WriteLine(Messages.ReturnToMainMenuMessage);
+
+            string yearInput = GetYearInput();
+
+            Console.WriteLine($"\nAverage score report for year {yearInput}:\n");
+            var report = _studySessionService.GetMonthlyAverageScoreByYear(int.Parse(yearInput));
+            Console.WriteLine(string.Join($"\n{Environment.NewLine}", report));
+
+            Console.WriteLine(Messages.PressAnyKeyToContinueMessage);
+            Console.ReadKey();
+        }
+
+        private void MonthlySessionsCountReport()
+        {
+            Console.Clear();
+
+            Console.WriteLine(Messages.MonthlyReportYearMessage);
+            Console.WriteLine(Messages.ReturnToMainMenuMessage);
+
+            string yearInput = GetYearInput();
+
+            Console.WriteLine($"\nSession count report for year {yearInput}:\n");
+            var report = _studySessionService.GetMonthlySessionsCountReportByYear(int.Parse(yearInput));
+            Console.WriteLine(string.Join($"\n{Environment.NewLine}", report));
+
+            Console.WriteLine(Messages.PressAnyKeyToContinueMessage);
+            Console.ReadKey();
+
         }
 
         private void ViewAllSessions()
@@ -87,16 +128,7 @@
             Console.WriteLine(Messages.StackToEditNamePrompt);
             Console.WriteLine(Messages.ReturnToMainMenuMessage);
 
-            string? stackToEditName = Console.ReadLine();
-            CheckReturnToMainMenu(stackToEditName);
-
-            while (_stackService.GetStack(stackToEditName) is null)
-            {
-                Console.WriteLine(string.Format(Messages.StackDoesNotExistMessage, stackToEditName));
-                Console.WriteLine(Messages.ReturnToMainMenuMessage);
-                stackToEditName = Console.ReadLine();
-                CheckReturnToMainMenu(stackToEditName);
-            }
+            string stackToEditName = GetExistingStackInput();
 
             Console.WriteLine(Messages.StackNamePrompt);
             Console.WriteLine(Messages.ReturnToMainMenuMessage);
@@ -164,16 +196,7 @@
             Console.WriteLine(Messages.FlashcardQuestionPrompt);
             Console.WriteLine(Messages.ReturnToMainMenuMessage);
 
-            string? flashcardFront = Console.ReadLine();
-            CheckReturnToMainMenu(parentName);
-
-            while (!Validator.IsFlashcardTextValid(flashcardFront))
-            {
-                Console.WriteLine(Messages.InvalidFlashcardTextMessage);
-                Console.WriteLine(Messages.ReturnToMainMenuMessage);
-                flashcardFront = Console.ReadLine();
-                CheckReturnToMainMenu(flashcardFront);
-            }
+            string flashcardFront = GetFlashcardText();
 
             while (_flashcardService.GetFlashcard(flashcardFront, parentStack.Id) is not null)
             {
@@ -186,17 +209,7 @@
             Console.WriteLine(Messages.FlashcardBackPrompt);
             Console.WriteLine(Messages.ReturnToMainMenuMessage);
 
-            string? flashcardBack = Console.ReadLine();
-            CheckReturnToMainMenu(flashcardBack);
-
-            while (!Validator.IsFlashcardTextValid(flashcardBack))
-            {
-                Console.WriteLine(Messages.InvalidFlashcardTextMessage);
-                Console.WriteLine(Messages.ReturnToMainMenuMessage);
-                flashcardBack = Console.ReadLine();
-                CheckReturnToMainMenu(flashcardBack);
-            }
-
+            string flashcardBack = GetFlashcardText();
 
             _flashcardService.EditFlashcard(flashcardToEdit.Front, flashcardFront, flashcardBack, parentStack.Id);
             Console.WriteLine(string.Format(Messages.SuccessfullyEditedFlashcardMessage, parentStack.Name));
@@ -304,6 +317,7 @@
             {
                 Console.WriteLine(string.Format(Messages.StackDoesNotExistMessage, stackToDisplayName));
                 Console.WriteLine(Messages.ReturnToMainMenuMessage);
+
                 stackToDisplayName = Console.ReadLine();
                 CheckReturnToMainMenu(stackToDisplayName);
                 stackToDisplay = _stackService.GetStack(stackToDisplayName);
@@ -313,6 +327,7 @@
             Console.WriteLine(Messages.StackToViewFlashcardCountPrompt);
             string? flashcardCount = Console.ReadLine();
             int numberOfFlashcardsToDisplay = 0;
+
             if (string.Equals(flashcardCount, "all", StringComparison.OrdinalIgnoreCase))
             {
                 numberOfFlashcardsToDisplay = numberOfAllFlashcards;
@@ -355,16 +370,7 @@
             Console.WriteLine(Messages.StackToDeleteNamePrompt);
             Console.WriteLine(Messages.ReturnToMainMenuMessage);
 
-            string? stackToDeleteName = Console.ReadLine();
-            CheckReturnToMainMenu(stackToDeleteName);
-
-            while (_stackService.GetStack(stackToDeleteName) is null)
-            {
-                Console.WriteLine(string.Format(Messages.StackDoesNotExistMessage, stackToDeleteName));
-                Console.WriteLine(Messages.ReturnToMainMenuMessage);
-                stackToDeleteName = Console.ReadLine();
-                CheckReturnToMainMenu(stackToDeleteName);
-            }
+            string stackToDeleteName = GetExistingStackInput();
 
             _stackService.DeleteStack(stackToDeleteName);
             Console.WriteLine(string.Format(Messages.SuccessfullyDeletedStackMessage, stackToDeleteName));
@@ -427,31 +433,13 @@
             Console.WriteLine(Messages.StackNamePrompt);
             Console.WriteLine(Messages.ReturnToMainMenuMessage);
 
-            string? stackName = Console.ReadLine();
-            CheckReturnToMainMenu(stackName);
-
-            while (!Validator.IsStackNameValid(stackName))
-            {
-                Console.WriteLine(Messages.InvalidStackNameMessage);
-                Console.WriteLine(Messages.ReturnToMainMenuMessage);
-                stackName = Console.ReadLine();
-                CheckReturnToMainMenu(stackName);
-            }
+            string stackName = GetStackNameInput();
 
             while (_stackService.GetStack(stackName) is not null)
             {
                 Console.WriteLine(string.Format(Messages.StackAlreadyExistsMessage, stackName));
                 Console.WriteLine(Messages.ReturnToMainMenuMessage);
-                stackName = Console.ReadLine();
-                CheckReturnToMainMenu(stackName);
-
-                while (!Validator.IsStackNameValid(stackName))
-                {
-                    Console.WriteLine(Messages.InvalidStackNameMessage);
-                    Console.WriteLine(Messages.ReturnToMainMenuMessage);
-                    stackName = Console.ReadLine();
-                    CheckReturnToMainMenu(stackName);
-                }
+                stackName = GetStackNameInput();
             }
             _stackService.AddStack(stackName);
             Console.WriteLine(string.Format(Messages.SuccessfullyAddedStackMessage, stackName));
@@ -486,16 +474,7 @@
             Console.WriteLine(Messages.FlashcardQuestionPrompt);
             Console.WriteLine(Messages.ReturnToMainMenuMessage);
 
-            string? flashcardFront = Console.ReadLine();
-            CheckReturnToMainMenu(parentName);
-
-            while (!Validator.IsFlashcardTextValid(flashcardFront))
-            {
-                Console.WriteLine(Messages.InvalidFlashcardTextMessage);
-                Console.WriteLine(Messages.ReturnToMainMenuMessage);
-                flashcardFront = Console.ReadLine();
-                CheckReturnToMainMenu(flashcardFront);
-            }
+            string flashcardFront = GetFlashcardText();
 
             while (_flashcardService.GetFlashcard(flashcardFront, parentStack.Id) is not null)
             {
@@ -508,16 +487,7 @@
             Console.WriteLine(Messages.FlashcardBackPrompt);
             Console.WriteLine(Messages.ReturnToMainMenuMessage);
 
-            string? flashcardBack = Console.ReadLine();
-            CheckReturnToMainMenu(flashcardBack);
-
-            while (!Validator.IsFlashcardTextValid(flashcardBack))
-            {
-                Console.WriteLine(Messages.InvalidFlashcardTextMessage);
-                Console.WriteLine(Messages.ReturnToMainMenuMessage);
-                flashcardBack = Console.ReadLine();
-                CheckReturnToMainMenu(flashcardBack);
-            }
+            string flashcardBack = GetFlashcardText();
 
             _flashcardService.AddFlashcard(flashcardFront, flashcardBack, parentStack.Id);
             Console.WriteLine(string.Format(Messages.SuccessfullyAddedFlashcardMessage, parentStack.Name));
@@ -541,6 +511,64 @@
             Console.WriteLine("Your stacks:\n");
             var allStacks = _stackService.GetAllStacks();
             Console.WriteLine(string.Join($"\n- - - - - - - - - - - -{Environment.NewLine}", allStacks.Select(s => s.Name)));
+        }
+
+        public string GetYearInput()
+        {
+            string? yearInput = Console.ReadLine();
+            CheckReturnToMainMenu(yearInput);
+
+            while (!Validator.IsYearValid(yearInput))
+            {
+                Console.WriteLine(Messages.InvalidYearMessage);
+                Console.WriteLine(Messages.ReturnToMainMenuMessage);
+                yearInput = Console.ReadLine();
+                CheckReturnToMainMenu(yearInput);
+
+            }
+            return yearInput;
+        }
+        public string GetExistingStackInput()
+        {
+            string? stackName = Console.ReadLine();
+            CheckReturnToMainMenu(stackName);
+
+            while (_stackService.GetStack(stackName) is null)
+            {
+                Console.WriteLine(string.Format(Messages.StackDoesNotExistMessage, stackName));
+                Console.WriteLine(Messages.ReturnToMainMenuMessage);
+                stackName = Console.ReadLine();
+                CheckReturnToMainMenu(stackName);
+            }
+            return stackName;
+        }
+        public string GetStackNameInput()
+        {
+            string? stackName = Console.ReadLine();
+            CheckReturnToMainMenu(stackName);
+
+            while (!Validator.IsStackNameValid(stackName))
+            {
+                Console.WriteLine(Messages.InvalidStackNameMessage);
+                Console.WriteLine(Messages.ReturnToMainMenuMessage);
+                stackName = Console.ReadLine();
+                CheckReturnToMainMenu(stackName);
+            }
+            return stackName;
+        }
+        public string GetFlashcardText()
+        {
+            string? flashcardText = Console.ReadLine();
+            CheckReturnToMainMenu(flashcardText);
+
+            while (!Validator.IsFlashcardTextValid(flashcardText))
+            {
+                Console.WriteLine(Messages.InvalidFlashcardTextMessage);
+                Console.WriteLine(Messages.ReturnToMainMenuMessage);
+                flashcardText = Console.ReadLine();
+                CheckReturnToMainMenu(flashcardText);
+            }
+            return flashcardText;
         }
     }
 }

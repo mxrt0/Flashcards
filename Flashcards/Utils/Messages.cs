@@ -87,6 +87,12 @@
 
         public readonly static string SessionConcludedMessage = "\nYour study session has concluded. You got {0} right out of {1}\n";
 
+        public readonly static string MonthlyReportYearMessage = "\nPlease enter the year you wish to view a monthly report for:\n";
+
+        public readonly static string InvalidYearMessage = "\nInvalid year. Please enter a positive integer:\n";
+
+
+
     }
 
 
