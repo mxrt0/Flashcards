@@ -35,6 +35,7 @@
             {
                 case 0:
                     Console.WriteLine("\nGoodbye!\n");
+                    Thread.Sleep(1000);
                     Environment.Exit(0);
                     break;
                 case 1:

@@ -10,7 +10,7 @@
 
         // User Input
 
-        public readonly static string InvalidInputMessage = $"\nInvalid input. Please enter a number between 0 and {UIHelper.NumberOfOptions}\n";
+        public readonly static string InvalidInputMessage = $"\nInvalid input. Please enter a number between 0 and {UIHelper.NumberOfOptions - 1}:\n";
 
 
         // Flashcard
