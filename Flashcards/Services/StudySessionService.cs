@@ -62,30 +62,30 @@ namespace Flashcards.Services
                                 ORDER BY StackName;";
             return connection.Query<MonthlySessionReport>(reportQuery, new { Year = year }).ToList();
         }
-        public List<MonthlySessionReport> GetMonthlyAverageScoreByYear(int year)
+        public List<MonthlyAverageScoreReport> GetMonthlyAverageScoreByYear(int year)
         {
             using var connection = new SqlConnection(DBHelper.ConnectionString);
             connection.Open();
             var reportQuery = @"
                                SELECT 
                                 StackName,
-                                ISNULL(ROUND([1], 0), 0) AS January,
-                                ISNULL(ROUND([2], 0), 0) AS February,
-                                ISNULL(ROUND([3], 0), 0) AS March,
-                                ISNULL(ROUND([4], 0), 0) AS April,
-                                ISNULL(ROUND([5], 0), 0) AS May,
-                                ISNULL(ROUND([6], 0), 0) AS June,
-                                ISNULL(ROUND([7], 0), 0) AS July,
-                                ISNULL(ROUND([8], 0), 0) AS August,
-                                ISNULL(ROUND([9], 0), 0) AS September,
-                                ISNULL(ROUND([10], 0), 0) AS October,
-                                ISNULL(ROUND([11], 0), 0) AS November,
-                                ISNULL(ROUND([12], 0), 0) AS December
-                            FROM (
+                                ISNULL(ROUND([1], 2), 0) AS January,
+                                ISNULL(ROUND([2], 2), 0) AS February,
+                                ISNULL(ROUND([3], 2), 0) AS March,
+                                ISNULL(ROUND([4], 2), 0) AS April,
+                                ISNULL(ROUND([5], 2), 0) AS May,
+                                ISNULL(ROUND([6], 2), 0) AS June,
+                                ISNULL(ROUND([7], 2), 0) AS July,
+                                ISNULL(ROUND([8], 2), 0) AS August,
+                                ISNULL(ROUND([9], 2), 0) AS September,
+                                ISNULL(ROUND([10], 2), 0) AS October,
+                                ISNULL(ROUND([11], 2), 0) AS November,
+                                ISNULL(ROUND([12], 2), 0) AS December
+                               FROM (
                                 SELECT 
                                     s.Name AS StackName,
                                     MONTH(ss.SessionDate) AS StudyMonth,
-                                    ss.Score
+                                    CAST(ss.Score AS FLOAT) AS Score
                                 FROM Stack s
                                 LEFT JOIN StudySession ss 
                                     ON s.Id = ss.StackId
@@ -97,7 +97,7 @@ namespace Flashcards.Services
                             ) AS PivotTable
                             ORDER BY StackName;";
 
-            return connection.Query<MonthlySessionReport>(reportQuery, new { Year = year }).ToList();
+            return connection.Query<MonthlyAverageScoreReport>(reportQuery, new { Year = year }).ToList();
         }
     }
 }

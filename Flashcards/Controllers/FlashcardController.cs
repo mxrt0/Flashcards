@@ -18,6 +18,8 @@
         }
         public void MainMenu()
         {
+            Console.Clear();
+
             UIHelper.DisplayOptions();
             string? userInput = Console.ReadLine();
             while (!Validator.IsUserInputValid(userInput))
@@ -271,7 +273,6 @@
                 string? userInput = Console.ReadLine();
                 if (string.Equals(userInput, "end", StringComparison.OrdinalIgnoreCase))
                 {
-                    Console.WriteLine(string.Format(Messages.SessionConcludedMessage, currentScore, _stackService.GetNumberOfFlashcardsInStack(stackToStudy.Id)));
                     break;
                 }
                 else if (string.Equals(userInput, "continue", StringComparison.OrdinalIgnoreCase))
@@ -289,7 +290,6 @@
 
                     if (string.Equals(userInput, "end", StringComparison.OrdinalIgnoreCase))
                     {
-                        Console.WriteLine(string.Format(Messages.SessionConcludedMessage, currentScore, _stackService.GetNumberOfFlashcardsInStack(stackToStudy.Id)));
                         break;
                     }
                     else if (string.Equals(userInput, "continue", StringComparison.OrdinalIgnoreCase))
@@ -298,7 +298,9 @@
                     }
                 }
             }
+            Console.WriteLine(string.Format(Messages.SessionConcludedMessage, currentScore, _stackService.GetNumberOfFlashcardsInStack(stackToStudy.Id)));
             _studySessionService.AddStudySession(DateTime.Now, currentScore, stackToStudy.Id);
+
             Console.WriteLine(Messages.PressAnyKeyToContinueMessage);
             Console.ReadKey();
         }
@@ -374,6 +376,9 @@
 
             _stackService.DeleteStack(stackToDeleteName);
             Console.WriteLine(string.Format(Messages.SuccessfullyDeletedStackMessage, stackToDeleteName));
+
+            Console.WriteLine(Messages.PressAnyKeyToContinueMessage);
+            Console.ReadKey();
         }
 
         private void DeleteFlashcard()

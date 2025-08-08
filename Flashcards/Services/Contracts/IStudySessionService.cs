@@ -8,6 +8,6 @@ namespace Flashcards.Services.Contracts
         void AddStudySession(DateTime date, int score, int stackId);
         List<StudySession> GetAllStudySessions();
         List<MonthlySessionReport> GetMonthlySessionsCountReportByYear(int year);
-        List<MonthlySessionReport> GetMonthlyAverageScoreByYear(int year);
+        List<MonthlyAverageScoreReport> GetMonthlyAverageScoreByYear(int year);
     }
 }
